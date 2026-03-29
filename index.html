@@ -1,0 +1,804 @@
+<!doctype html>
+<html class="dark" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+		<title>Tiponero | The Private Monero Donation Engine</title>
+		<meta
+			name="description"
+			content="Self-hosted Monero donation engine. Unique subaddress per donor, view-key secure, embeddable widget. The way the protocol was designed to be used."
+		/>
+		<meta name="theme-color" content="#FF6600" />
+
+		<!-- Open Graph -->
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Tiponero | The Private Monero Donation Engine" />
+		<meta
+			property="og:description"
+			content="Self-hosted Monero donation engine. Unique subaddress per donor, view-key secure, embeddable widget."
+		/>
+		<meta property="og:url" content="https://tiponero.org" />
+		<meta property="og:site_name" content="Tiponero" />
+
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Tiponero | The Private Monero Donation Engine" />
+		<meta
+			name="twitter:description"
+			content="Self-hosted Monero donation engine. Unique subaddress per donor, view-key secure, embeddable widget."
+		/>
+
+		<link rel="canonical" href="https://tiponero.org" />
+		<link
+			rel="icon"
+			type="image/svg+xml"
+			href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F7E0;</text></svg>"
+		/>
+
+		<!-- Tailwind CDN: dynamic response, SRI not applicable -->
+		<script src="https://cdn.tailwindcss.com?plugins=container-queries"></script>
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.14.9/dist/cdn.min.js"
+			integrity="sha384-eA6+k1peuuIgxPHwWoQHx6OoDZ7hFJ+SKfMOhop5+zMV4SWR5OWBMatbIdoqA4lZ"
+			crossorigin="anonymous"
+		></script>
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"
+			integrity="sha384-9Ax3MmS9AClxJyd5/zafcXXjxmwFhZCdsT6HJoJjarvCaAkJlk5QDzjLJm+Wdx5F"
+			crossorigin="anonymous"
+		></script>
+		<!-- Google Fonts: UA-dependent response, SRI not applicable -->
+		<link
+			href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+			rel="stylesheet"
+		/>
+		<script src="tailwind.config.js"></script>
+		<style>
+			/* ── Base ── */
+			[x-cloak] {
+				display: none !important;
+			}
+			body {
+				font-family: "Inter", sans-serif;
+				background-color: #131313;
+				color: #e5e2e1;
+				height: 100dvh;
+				overflow: hidden;
+			}
+			.material-symbols-outlined {
+				font-variation-settings:
+					"FILL" 0,
+					"wght" 400,
+					"GRAD" 0,
+					"opsz" 24;
+			}
+			.milled-edge {
+				box-shadow: inset 0 0.5px 0 0 rgba(255, 102, 0, 0.1);
+			}
+			.orange-gradient {
+				background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%);
+			}
+
+			/* ── Scroll container (main, not html — keeps fixed header stable) ── */
+			main {
+				height: 100dvh;
+				overflow-x: hidden;
+				overflow-y: auto;
+				scroll-snap-type: y mandatory;
+				scroll-behavior: smooth;
+				overscroll-behavior-y: contain;
+			}
+
+			/* ── Snap section base ── */
+			.snap-section {
+				scroll-snap-align: start;
+				min-height: 100dvh;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				padding-top: 4rem;
+			}
+
+			/* ── Hero entrance (CSS keyframes, plays on load) ── */
+			@keyframes heroFadeUp {
+				from {
+					opacity: 0;
+					transform: translateY(2.5rem);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			@keyframes heroFadeIn {
+				from {
+					opacity: 0;
+				}
+				to {
+					opacity: 1;
+				}
+			}
+			.hero-word {
+				display: inline-block;
+				opacity: 0;
+				animation: heroFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+			}
+			.hero-fade {
+				opacity: 0;
+				animation: heroFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+			}
+			.hero-img {
+				opacity: 0;
+				animation: heroFadeIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+			}
+
+			/* ── Text glow ── */
+			.glow-orange {
+				text-shadow:
+					0 0 80px rgba(255, 102, 0, 0.5),
+					0 0 200px rgba(255, 102, 0, 0.15);
+			}
+
+			/* ── Scroll-triggered reveal system ── */
+			.reveal {
+				opacity: 0;
+				will-change: opacity, transform;
+				transition:
+					opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+					transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+					filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+			}
+			.reveal.in-view {
+				opacity: 1;
+				transform: none !important;
+				filter: none !important;
+			}
+
+			/* Direction variants */
+			.r-up {
+				transform: translateY(3rem);
+			}
+			.r-down {
+				transform: translateY(-2rem);
+			}
+			.r-left {
+				transform: translateX(-3rem);
+			}
+			.r-right {
+				transform: translateX(3rem);
+			}
+			.r-scale {
+				transform: scale(0.92);
+			}
+			.r-blur {
+				filter: blur(8px);
+				transform: translateY(1rem);
+			}
+		</style>
+	</head>
+	<body class="selection:bg-primary-container selection:text-on-primary-container">
+		<!-- ════════════════════════════════════════════════ -->
+		<!-- TopAppBar (fixed, outside snap flow) -->
+		<!-- ════════════════════════════════════════════════ -->
+		<header
+			class="fixed top-0 w-full z-50 flex justify-between items-center px-8 py-2 bg-background/95 backdrop-blur-sm"
+			x-data="{ mobileOpen: false }"
+		>
+			<a href="#home" class="text-2xl font-bold tracking-tighter text-primary font-headline uppercase">Tiponero</a>
+
+			<nav class="hidden md:flex gap-8 items-center" aria-label="Primary navigation">
+				<a class="font-headline tracking-[-0.02em] uppercase text-primary font-bold" href="#home">Home</a>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-on-surface-variant/60 hover:text-on-surface transition-colors"
+					href="#problem"
+					>The Problem</a
+				>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-on-surface-variant/60 hover:text-on-surface transition-colors"
+					href="#how-it-works"
+					>How It Works</a
+				>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-on-surface-variant/60 hover:text-on-surface transition-colors"
+					href="#features"
+					>Features</a
+				>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-on-surface-variant/60 hover:text-on-surface transition-colors"
+					href="#ethos"
+					>Ethos</a
+				>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-on-surface-variant/60 hover:text-on-surface transition-colors"
+					href="#trust"
+					>Trust</a
+				>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-on-surface-variant/60 hover:text-on-surface transition-colors"
+					href="#get-started"
+					>Get Started</a
+				>
+			</nav>
+
+			<button
+				class="md:hidden text-on-surface hover:text-primary-container transition-colors"
+				@click="mobileOpen = !mobileOpen"
+				:aria-expanded="mobileOpen"
+				aria-label="Toggle navigation menu"
+			>
+				<span class="material-symbols-outlined text-3xl" x-text="mobileOpen ? 'close' : 'menu'" aria-hidden="true"
+					>menu</span
+				>
+			</button>
+
+			<a
+				class="orange-gradient text-on-primary-fixed font-bold px-6 py-2 rounded-sm milled-edge hover:opacity-90 transition-all duration-150 active:scale-95 uppercase text-md tracking-wider font-headline hidden md:inline-block"
+				href="https://tiponero.org/docs"
+				>DOCS</a
+			>
+
+			<nav
+				class="absolute top-full left-0 w-full bg-background/[0.98] backdrop-blur-md flex flex-col items-start px-8 py-6 gap-6 md:hidden"
+				x-show="mobileOpen"
+				x-transition:enter="transition ease-out duration-200"
+				x-transition:enter-start="opacity-0 -translate-y-2"
+				x-transition:enter-end="opacity-100 translate-y-0"
+				x-transition:leave="transition ease-in duration-150"
+				x-transition:leave-start="opacity-100 translate-y-0"
+				x-transition:leave-end="opacity-0 -translate-y-2"
+				@click.away="mobileOpen = false"
+				x-cloak
+				aria-label="Mobile navigation"
+			>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-primary font-bold text-lg"
+					href="#home"
+					@click="mobileOpen = false"
+					>Home</a
+				>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-on-surface-variant/60 hover:text-on-surface transition-colors text-lg"
+					href="#problem"
+					@click="mobileOpen = false"
+					>The Problem</a
+				>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-on-surface-variant/60 hover:text-on-surface transition-colors text-lg"
+					href="#how-it-works"
+					@click="mobileOpen = false"
+					>How It Works</a
+				>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-on-surface-variant/60 hover:text-on-surface transition-colors text-lg"
+					href="#features"
+					@click="mobileOpen = false"
+					>Features</a
+				>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-on-surface-variant/60 hover:text-on-surface transition-colors text-lg"
+					href="#ethos"
+					@click="mobileOpen = false"
+					>Ethos</a
+				>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-on-surface-variant/60 hover:text-on-surface transition-colors text-lg"
+					href="#trust"
+					@click="mobileOpen = false"
+					>Trust</a
+				>
+				<a
+					class="font-headline tracking-[-0.02em] uppercase text-on-surface-variant/60 hover:text-on-surface transition-colors text-lg"
+					href="#get-started"
+					@click="mobileOpen = false"
+					>Get Started</a
+				>
+				<a
+					class="orange-gradient text-on-primary-fixed font-bold px-6 py-3 rounded-sm milled-edge hover:opacity-90 transition-all uppercase text-md tracking-wider font-headline w-full text-center mt-2"
+					href="https://tiponero.org/docs"
+					@click="mobileOpen = false"
+					>DOCS</a
+				>
+			</nav>
+		</header>
+
+		<!-- ════════════════════════════════════════════════ -->
+		<!-- Main content — each section is a snap target -->
+		<!-- ════════════════════════════════════════════════ -->
+		<main x-data>
+			<!-- ──────────────────────────────── -->
+			<!-- HERO -->
+			<!-- ──────────────────────────────── -->
+			<section id="home" class="snap-section px-8 md:px-24 relative overflow-hidden bg-background">
+				<div class="max-w-5xl relative z-10">
+					<h1 class="font-headline text-5xl sm:text-6xl md:text-8xl font-bold tracking-[-0.02em] mb-8 leading-[1.1]">
+						<span class="hero-word" style="animation-delay: 0.15s">The </span>
+						<span class="hero-word" style="animation-delay: 0.25s">private </span>
+						<span class="hero-word text-primary-container glow-orange" style="animation-delay: 0.45s">Monero</span
+						><br />
+						<span class="hero-word" style="animation-delay: 0.65s">donation </span>
+						<span class="hero-word" style="animation-delay: 0.75s">engine</span>
+					</h1>
+					<p
+						class="hero-fade font-body text-xl md:text-2xl text-on-surface-variant max-w-2xl mb-12 leading-relaxed"
+						style="animation-delay: 1s"
+					>
+						Self-hosted. View-key secure. Unique subaddress per donor. The way the protocol was designed to be used.
+					</p>
+					<div class="hero-fade flex flex-wrap gap-4" style="animation-delay: 1.25s">
+						<a
+							class="orange-gradient text-on-primary-fixed font-bold px-8 py-4 rounded-sm text-lg milled-edge hover:opacity-90 transition-all font-headline uppercase tracking-tight"
+							href="https://tiponero.org/docs"
+						>
+							Get Started
+						</a>
+						<a
+							class="bg-surface-container-high text-primary px-8 py-4 rounded-sm text-lg milled-edge hover:bg-surface-bright transition-all font-headline uppercase tracking-tight"
+							href="https://tiponero.org/demo"
+						>
+							Live Demo
+						</a>
+					</div>
+				</div>
+				<!-- Atmospheric image -->
+				<div class="absolute bottom-0 inset-x-0 h-48 md:h-72 hero-img" style="animation-delay: 1.5s">
+					<img
+						class="w-full h-full object-cover mix-blend-luminosity opacity-30"
+						alt="Abstract cryptographic visualization"
+						src="https://placehold.co/1280x288/1c1b1b/FF6600?text=Hero+Visual"
+					/>
+					<div class="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+				</div>
+			</section>
+
+			<!-- ──────────────────────────────── -->
+			<!-- PROBLEM -->
+			<!-- ──────────────────────────────── -->
+			<section id="problem" class="snap-section px-8 md:px-24 bg-surface-container-low">
+				<div class="grid md:grid-cols-2 gap-16 md:gap-24 items-center w-full">
+					<div>
+						<span
+							class="reveal r-up font-label text-primary-container uppercase tracking-[0.2em] mb-4 block text-md"
+							x-intersect.once="$el.classList.add('in-view')"
+							>The Problem</span
+						>
+						<h2
+							class="reveal r-up font-headline text-4xl md:text-5xl font-bold tracking-tight mb-8"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.1s"
+						>
+							Accepting Monero donations is harder than it should be
+						</h2>
+					</div>
+					<div class="font-body text-lg text-on-surface-variant space-y-6 leading-relaxed">
+						<p class="reveal r-right" x-intersect.once="$el.classList.add('in-view')" style="transition-delay: 0.2s">
+							Most setups paste a static address and call it done. That means every donor sends to the same address, you
+							have no way to attribute payments, and you are not using subaddresses the way Monero was designed to work.
+						</p>
+						<p
+							class="reveal r-right text-on-surface font-medium"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.35s"
+						>
+							You could build the plumbing yourself. Or you could use
+							<span class="text-primary-container">Tiponero</span>.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- ──────────────────────────────── -->
+			<!-- HOW IT WORKS -->
+			<!-- ──────────────────────────────── -->
+			<section id="how-it-works" class="snap-section px-8 md:px-24 bg-background">
+				<div class="w-full">
+					<div class="mb-16 md:mb-24">
+						<span
+							class="reveal r-up font-label text-primary-container uppercase tracking-[0.2em] mb-4 block text-md"
+							x-intersect.once="$el.classList.add('in-view')"
+							>How It Works</span
+						>
+						<h2
+							class="reveal r-up font-headline text-4xl md:text-5xl font-bold tracking-tight"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.1s"
+						>
+							Make it simple for your donors
+						</h2>
+					</div>
+					<div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+						<div
+							class="reveal r-up bg-surface-container-high p-6 md:p-8 milled-edge flex flex-col h-full"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.15s"
+						>
+							<span class="font-label text-primary mb-4 md:mb-6 text-xl">01</span>
+							<h3 class="font-headline font-bold mb-3 md:mb-4 text-xl">Deploy</h3>
+							<p class="text-on-surface-variant font-body text-md md:text-base">
+								Deploy on your own server. Point it at your monero-wallet-rpc instance running in view-only mode. Your
+								spending keys never touch the server.
+							</p>
+						</div>
+						<div
+							class="reveal r-up bg-surface-container-high p-6 md:p-8 milled-edge flex flex-col h-full"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.25s"
+						>
+							<span class="font-label text-primary mb-4 md:mb-6 text-xl">02</span>
+							<h3 class="font-headline font-bold mb-3 md:mb-4 text-xl">Embed</h3>
+							<p class="text-on-surface-variant font-body text-md md:text-base">
+								Embed the widget on your site. A single iframe drop-in or SVG Badge. Works on any website, or markdown
+								document.
+							</p>
+						</div>
+						<div
+							class="reveal r-up bg-surface-container-high p-6 md:p-8 milled-edge flex flex-col h-full"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.35s"
+						>
+							<span class="font-label text-primary mb-4 md:mb-6 text-xl">03</span>
+							<h3 class="font-headline font-bold mb-3 md:mb-4 text-xl">Use Subaddress</h3>
+							<p class="text-on-surface-variant font-body text-md md:text-base">
+								Each donor gets a unique subaddress. Generated on the fly, displayed as a QR code, monitored in real
+								time. Never reused.
+							</p>
+						</div>
+						<div
+							class="reveal r-up bg-surface-container-high p-6 md:p-8 milled-edge flex flex-col h-full"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.45s"
+						>
+							<span class="font-label text-primary mb-4 md:mb-6 text-xl">04</span>
+							<h3 class="font-headline font-bold mb-3 md:mb-4 text-xl">Track Donations</h3>
+							<p class="text-on-surface-variant font-body text-md md:text-base">
+								Payments appear in your admin panel. Track donations, manage widgets. Your data stays on your machine.
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ──────────────────────────────── -->
+			<!-- FEATURES BENTO -->
+			<!-- ──────────────────────────────── -->
+			<section id="features" class="snap-section px-8 md:px-24 pb-16 md:pb-0 bg-surface-container-lowest">
+				<div class="w-full">
+					<div class="mb-12 md:mb-16 text-center">
+						<h2
+							class="reveal r-blur font-headline text-4xl md:text-5xl font-bold tracking-tight"
+							x-intersect.once="$el.classList.add('in-view')"
+						>
+							Everything you need.<br />Nothing you don't.
+						</h2>
+					</div>
+					<div class="grid md:grid-cols-3 gap-4 md:gap-5">
+						<!-- Large Feature -->
+						<div
+							class="reveal r-scale md:col-span-2 bg-surface-container-high p-6 md:p-8 milled-edge flex flex-col justify-between min-h-[200px] md:min-h-[280px]"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.1s"
+						>
+							<div>
+								<span
+									class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4"
+									aria-hidden="true"
+									>privacy_tip</span
+								>
+								<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Unique subaddress per donor</h3>
+								<p class="text-on-surface-variant text-md md:text-base max-w-md">
+									The Monero protocol was built around subaddresses. Tiponero uses them correctly: one per donor, per
+									session, never reused.
+								</p>
+							</div>
+							<div class="font-label text-xs text-primary-fixed-dim/60 tracking-widest mt-6">84B1E9...A922F</div>
+						</div>
+						<div
+							class="reveal r-scale bg-surface-container-high p-6 md:p-8 milled-edge"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.2s"
+						>
+							<span
+								class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4"
+								aria-hidden="true"
+								>visibility_off</span
+							>
+							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">View-key only</h3>
+							<p class="text-on-surface-variant text-md md:text-base">
+								Your monero-wallet-rpc runs in view-only mode. The server can monitor incoming funds. It cannot spend
+								them. Ever.
+							</p>
+						</div>
+						<div
+							class="reveal r-scale bg-surface-container-high p-6 md:p-8 milled-edge"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.3s"
+						>
+							<span
+								class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4"
+								aria-hidden="true"
+								>widgets</span
+							>
+							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Embeddable widget</h3>
+							<p class="text-on-surface-variant text-md md:text-base">
+								Drop an iframe into any page. A unique QR code is generated per donor.
+							</p>
+						</div>
+						<div
+							class="reveal r-scale bg-surface-container-high p-6 md:p-8 milled-edge"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.35s"
+						>
+							<span
+								class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4"
+								aria-hidden="true"
+								>dashboard</span
+							>
+							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Admin panel</h3>
+							<p class="text-on-surface-variant text-md md:text-base">
+								Track donations, manage multiple widgets, and monitor your setup from a private dashboard with 2FA.
+							</p>
+						</div>
+						<div
+							class="reveal r-scale bg-surface-container-high p-6 md:p-8 milled-edge"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.4s"
+						>
+							<span
+								class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4"
+								aria-hidden="true"
+								>dns</span
+							>
+							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Fully self-hosted</h3>
+							<p class="text-on-surface-variant text-md md:text-base">
+								You run it on your infrastructure. We never see your donors, your amounts, or your data. No cloud, no
+								account.
+							</p>
+						</div>
+						<div
+							class="reveal r-up md:col-span-3 bg-surface-container-high p-6 md:p-8 milled-edge flex items-center"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.5s"
+						>
+							<div class="flex items-center gap-4 md:gap-6">
+								<span class="material-symbols-outlined text-primary-container text-3xl md:text-4xl" aria-hidden="true"
+									>verified_user</span
+								>
+								<div>
+									<h3 class="font-headline text-xl md:text-2xl font-bold">MIT licensed</h3>
+									<p class="text-on-surface-variant text-md md:text-base">
+										Read it, audit it, fork it, modify it. No strings attached.
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ──────────────────────────────── -->
+			<!-- ETHOS / FOR WHO -->
+			<!-- ──────────────────────────────── -->
+			<section id="ethos" class="snap-section px-8 md:px-24 bg-background">
+				<div class="w-full">
+					<div class="mb-16 md:mb-24">
+						<h2
+							class="reveal r-up font-headline text-4xl md:text-6xl font-bold tracking-tight max-w-xl"
+							x-intersect.once="$el.classList.add('in-view')"
+						>
+							Built for people who take privacy seriously
+						</h2>
+					</div>
+					<div class="space-y-8 md:space-y-12">
+						<div
+							class="reveal r-right grid md:grid-cols-12 items-start gap-4 md:gap-8 group"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.15s"
+						>
+							<div class="md:col-span-1 font-label text-primary-container text-md py-2">01</div>
+							<div
+								class="md:col-span-4 font-headline text-2xl md:text-3xl font-bold py-2 group-hover:text-primary-container transition-colors"
+							>
+								Open source developers
+							</div>
+							<div
+								class="md:col-span-7 font-body text-on-surface-variant text-base md:text-lg leading-relaxed pl-0 md:pl-8"
+							>
+								Accept donations for your project without routing payments through a third-party custodian. Keep your
+								donors and your amounts to yourself.
+							</div>
+						</div>
+						<div
+							class="reveal r-right grid md:grid-cols-12 items-start gap-4 md:gap-8 group"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.3s"
+						>
+							<div class="md:col-span-1 font-label text-primary-container text-md py-2">02</div>
+							<div
+								class="md:col-span-4 font-headline text-2xl md:text-3xl font-bold py-2 group-hover:text-primary-container transition-colors"
+							>
+								Journalists and activists
+							</div>
+							<div
+								class="md:col-span-7 font-body text-on-surface-variant text-base md:text-lg leading-relaxed pl-0 md:pl-8"
+							>
+								Financial surveillance is real. Monero solves it at the protocol level. Tiponero makes sure your
+								donation setup doesn't introduce it back at the application layer.
+							</div>
+						</div>
+						<div
+							class="reveal r-right grid md:grid-cols-12 items-start gap-4 md:gap-8 group"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.45s"
+						>
+							<div class="md:col-span-1 font-label text-primary-container text-md py-2">03</div>
+							<div
+								class="md:col-span-4 font-headline text-2xl md:text-3xl font-bold py-2 group-hover:text-primary-container transition-colors"
+							>
+								Privacy-conscious creators
+							</div>
+							<div
+								class="md:col-span-7 font-body text-on-surface-variant text-base md:text-lg leading-relaxed pl-0 md:pl-8"
+							>
+								Writers, podcasters, independent researchers. If you want to accept support from your audience without
+								handing your financial data to a platform, this is for you.
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ──────────────────────────────── -->
+			<!-- TRUST -->
+			<!-- ──────────────────────────────── -->
+			<section id="trust" class="snap-section px-8 md:px-24 bg-surface-container-low">
+				<div class="max-w-4xl mx-auto text-center">
+					<span
+						class="reveal r-scale material-symbols-outlined text-primary-container text-6xl mb-8"
+						aria-hidden="true"
+						x-intersect.once="$el.classList.add('in-view')"
+						>shield</span
+					>
+					<h2
+						class="reveal r-blur font-headline text-4xl md:text-5xl font-bold mb-8"
+						x-intersect.once="$el.classList.add('in-view')"
+						style="transition-delay: 0.15s"
+					>
+						We will never run a hosted version
+					</h2>
+					<p
+						class="reveal r-up font-body text-lg md:text-xl text-on-surface-variant mb-12 leading-relaxed"
+						x-intersect.once="$el.classList.add('in-view')"
+						style="transition-delay: 0.3s"
+					>
+						Not because we can't. Because the whole point is that we never see your donors or your funds. Self-hosted is
+						not a limitation, it's the design. We use the protocol ourselves:
+						<span class="text-on-surface font-medium">the project accepts donations through Tiponero</span>.
+					</p>
+					<div
+						class="reveal r-scale p-4 bg-surface-container-lowest inline-block"
+						x-intersect.once="$el.classList.add('in-view')"
+						style="transition-delay: 0.45s"
+					>
+						<img
+							class="w-40 h-40 md:w-48 md:h-48 mix-blend-screen opacity-90"
+							alt="Monero donation QR code generated by Tiponero"
+							src="https://placehold.co/192x192/0e0e0e/FF6600?text=XMR+QR"
+						/>
+					</div>
+				</div>
+			</section>
+
+			<!-- ──────────────────────────────── -->
+			<!-- CTA + FOOTER (combined snap section) -->
+			<!-- ──────────────────────────────── -->
+			<section id="get-started" class="snap-section bg-background px-0 relative" style="justify-content: stretch">
+				<!-- CTA Content -->
+				<div class="flex-1 flex flex-col justify-center px-8 md:px-24 py-16 md:py-0">
+					<div class="grid md:grid-cols-2 gap-16 md:gap-24 items-center">
+						<div>
+							<h2
+								class="reveal r-left font-headline text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight mb-8"
+								x-intersect.once="$el.classList.add('in-view')"
+							>
+								Run it yourself<br />in minutes
+							</h2>
+							<p
+								class="reveal r-left font-body text-lg md:text-xl text-on-surface-variant"
+								x-intersect.once="$el.classList.add('in-view')"
+								style="transition-delay: 0.1s"
+							>
+								Full documentation, Docker, NixOS and Makefile deployment guides.
+							</p>
+						</div>
+						<div class="grid gap-4">
+							<a
+								class="reveal r-right bg-surface-container-high p-6 md:p-8 flex justify-between items-center milled-edge hover:bg-surface-bright transition-all group"
+								href="https://tiponero.org/docs"
+								x-intersect.once="$el.classList.add('in-view')"
+								style="transition-delay: 0.15s"
+							>
+								<span class="font-headline text-xl md:text-2xl font-bold">Read the docs</span>
+								<span
+									class="material-symbols-outlined text-primary-container group-hover:translate-x-2 transition-transform"
+									aria-hidden="true"
+									>arrow_forward</span
+								>
+							</a>
+							<a
+								class="reveal r-right bg-surface-container-high p-6 md:p-8 flex justify-between items-center milled-edge hover:bg-surface-bright transition-all group"
+								href="https://tiponero.org/demo"
+								x-intersect.once="$el.classList.add('in-view')"
+								style="transition-delay: 0.25s"
+							>
+								<span class="font-headline text-xl md:text-2xl font-bold">Live Demo</span>
+								<span
+									class="material-symbols-outlined text-primary-container group-hover:translate-x-2 transition-transform"
+									aria-hidden="true"
+									>bolt</span
+								>
+							</a>
+							<a
+								class="reveal r-right bg-surface-container-high p-6 md:p-8 flex justify-between items-center milled-edge hover:bg-surface-bright transition-all group"
+								href="https://github.com/tiponero/tiponero-core"
+								x-intersect.once="$el.classList.add('in-view')"
+								style="transition-delay: 0.35s"
+							>
+								<span class="font-headline text-xl md:text-2xl font-bold">Star on GitHub</span>
+								<span
+									class="material-symbols-outlined text-primary-container group-hover:translate-x-2 transition-transform"
+									aria-hidden="true"
+									>code</span
+								>
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<!-- Footer (pinned to bottom of this snap section) -->
+				<footer class="w-full bg-surface-container-lowest">
+					<div class="px-8 md:px-24 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+						<div class="flex items-center gap-4">
+							<span class="font-label text-primary-container text-md">REACH US</span>
+							<a
+								class="font-label text-on-surface hover:text-primary transition-colors"
+								href="mailto:tiponero.org@proton.me"
+								>tiponero.org@proton.me</a
+							>
+						</div>
+						<div class="flex gap-8">
+							<a
+								class="font-label text-xs uppercase tracking-widest text-monero-gray hover:text-on-surface transition-colors"
+								href="https://tiponero.org/docs"
+								>DOCS</a
+							>
+							<a
+								class="font-label text-xs uppercase tracking-widest text-monero-gray hover:text-on-surface transition-colors"
+								href="https://github.com/tiponero/tiponero-core"
+								>GitHub</a
+							>
+							<a
+								class="font-label text-xs uppercase tracking-widest text-monero-gray hover:text-on-surface transition-colors"
+								href="https://tiponero.org/demo"
+								>DEMO</a
+							>
+							<a
+								class="font-label text-xs uppercase tracking-widest text-monero-gray hover:text-on-surface transition-colors"
+								href="https://github.com/tiponero/tiponero-core/blob/main/LICENSE"
+								>LICENCE</a
+							>
+						</div>
+						<div class="font-label text-xs uppercase tracking-widest text-monero-gray">&copy; 2026 Tiponero.ORG</div>
+					</div>
+				</footer>
+			</section>
+		</main>
+
+		<!-- ── Scroll speed controller ── -->
+		<script src="scroll.js"></script>
+	</body>
+</html>
