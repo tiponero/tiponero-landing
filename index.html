@@ -59,6 +59,15 @@
 			rel="stylesheet"
 		/>
 		<script src="tailwind.config.js"></script>
+		<!-- Three.js importmap (must precede module scripts) -->
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js",
+					"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+				}
+			}
+		</script>
 		<style>
 			/* ── Base ── */
 			[x-cloak] {
@@ -183,6 +192,8 @@
 		</style>
 	</head>
 	<body class="selection:bg-primary-container selection:text-on-primary-container">
+		<!-- ── 3D background canvas ── -->
+		<canvas id="three-canvas" class="fixed inset-0 w-full h-full" style="z-index: 0; pointer-events: none;"></canvas>
 		<!-- ════════════════════════════════════════════════ -->
 		<!-- TopAppBar (fixed, outside snap flow) -->
 		<!-- ════════════════════════════════════════════════ -->
@@ -310,11 +321,11 @@
 		<!-- ════════════════════════════════════════════════ -->
 		<!-- Main content — each section is a snap target -->
 		<!-- ════════════════════════════════════════════════ -->
-		<main x-data>
+		<main x-data class="relative z-10">
 			<!-- ──────────────────────────────── -->
 			<!-- HERO -->
 			<!-- ──────────────────────────────── -->
-			<section id="home" class="snap-section px-8 md:px-24 relative overflow-hidden bg-background">
+			<section id="home" class="snap-section px-8 md:px-24 relative overflow-hidden bg-background/40">
 				<div class="max-w-5xl relative z-10">
 					<h1 class="font-headline text-5xl sm:text-6xl md:text-8xl font-bold tracking-[-0.02em] mb-8 leading-[1.1]">
 						<span class="hero-word" style="animation-delay: 0.15s">The </span>
@@ -343,23 +354,14 @@
 						>
 							Live Demo
 						</a>
-					</div>
 				</div>
-				<!-- Atmospheric image -->
-				<div class="absolute bottom-0 inset-x-0 h-48 md:h-72 hero-img" style="animation-delay: 1.5s">
-					<img
-						class="w-full h-full object-cover mix-blend-luminosity opacity-30"
-						alt="Abstract cryptographic visualization"
-						src="https://placehold.co/1280x288/1c1b1b/FF6600?text=Hero+Visual"
-					/>
-					<div class="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
-				</div>
-			</section>
+			</div>
+		</section>
 
 			<!-- ──────────────────────────────── -->
 			<!-- PROBLEM -->
 			<!-- ──────────────────────────────── -->
-			<section id="problem" class="snap-section px-8 md:px-24 bg-surface-container-low">
+			<section id="problem" class="snap-section px-8 md:px-24 bg-surface-container-low/85">
 				<div class="grid md:grid-cols-2 gap-16 md:gap-24 items-center w-full">
 					<div>
 						<span
@@ -395,7 +397,7 @@
 			<!-- ──────────────────────────────── -->
 			<!-- HOW IT WORKS -->
 			<!-- ──────────────────────────────── -->
-			<section id="how-it-works" class="snap-section px-8 md:px-24 bg-background">
+			<section id="how-it-works" class="snap-section px-8 md:px-24 bg-background/85">
 				<div class="w-full">
 					<div class="mb-16 md:mb-24">
 						<span
@@ -466,7 +468,7 @@
 			<!-- ──────────────────────────────── -->
 			<!-- FEATURES BENTO -->
 			<!-- ──────────────────────────────── -->
-			<section id="features" class="snap-section px-8 md:px-24 pb-16 md:pb-0 bg-surface-container-lowest">
+			<section id="features" class="snap-section px-8 md:px-24 pb-16 md:pb-0 bg-surface-container-lowest/85">
 				<div class="w-full">
 					<div class="mb-12 md:mb-16 text-center">
 						<h2
@@ -583,7 +585,7 @@
 			<!-- ──────────────────────────────── -->
 			<!-- ETHOS / FOR WHO -->
 			<!-- ──────────────────────────────── -->
-			<section id="ethos" class="snap-section px-8 md:px-24 bg-background">
+			<section id="ethos" class="snap-section px-8 md:px-24 bg-background/85">
 				<div class="w-full">
 					<div class="mb-16 md:mb-24">
 						<h2
@@ -655,14 +657,8 @@
 			<!-- ──────────────────────────────── -->
 			<!-- TRUST -->
 			<!-- ──────────────────────────────── -->
-			<section id="trust" class="snap-section px-8 md:px-24 bg-surface-container-low">
+			<section id="trust" class="snap-section px-8 md:px-24 bg-surface-container-low/85">
 				<div class="max-w-4xl mx-auto text-center">
-					<span
-						class="reveal r-scale material-symbols-outlined text-primary-container text-6xl mb-8"
-						aria-hidden="true"
-						x-intersect.once="$el.classList.add('in-view')"
-						>shield</span
-					>
 					<h2
 						class="reveal r-blur font-headline text-4xl md:text-5xl font-bold mb-8"
 						x-intersect.once="$el.classList.add('in-view')"
@@ -696,7 +692,7 @@
 			<!-- ──────────────────────────────── -->
 			<!-- CTA + FOOTER (combined snap section) -->
 			<!-- ──────────────────────────────── -->
-			<section id="get-started" class="snap-section bg-background px-0 relative" style="justify-content: stretch">
+			<section id="get-started" class="snap-section bg-background/85 px-0 relative" style="justify-content: stretch">
 				<!-- CTA Content -->
 				<div class="flex-1 flex flex-col justify-center px-8 md:px-24 py-16 md:py-0">
 					<div class="grid md:grid-cols-2 gap-16 md:gap-24 items-center">
@@ -760,7 +756,7 @@
 				</div>
 
 				<!-- Footer (pinned to bottom of this snap section) -->
-				<footer class="w-full bg-surface-container-lowest">
+				<footer class="w-full bg-surface-container-lowest/90">
 					<div class="px-8 md:px-24 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
 						<div class="flex items-center gap-4">
 							<span class="font-label text-primary-container text-md">REACH US</span>
@@ -800,5 +796,7 @@
 
 		<!-- ── Scroll speed controller ── -->
 		<script src="scroll.js"></script>
+		<!-- ── 3D scene ── -->
+		<script type="module" src="scene.js"></script>
 	</body>
 </html>
