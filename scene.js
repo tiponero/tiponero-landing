@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
 // ── Renderer ──
 const canvas = document.getElementById("three-canvas");
@@ -13,8 +14,14 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
 
+// ── Environment map for PBR / metallic reflections ──
+const pmremGenerator = new THREE.PMREMGenerator(renderer);
+const envTexture = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+pmremGenerator.dispose();
+
 // ── Scene & Camera ──
 const scene = new THREE.Scene();
+scene.environment = envTexture;
 const camera = new THREE.PerspectiveCamera(
   40,
   window.innerWidth / window.innerHeight,
@@ -56,8 +63,8 @@ const waypoints = [
   { pos: [4.5, 0.2, 0], look: [0, 0, 0] },
   // 5 — Trust: back of coin, slightly above
   { pos: [-0.5, 1.2, -4], look: [0, 0, 0] },
-  // 6 — CTA: pulled back wide, front face, slight tilt
-  { pos: [0.8, 0.4, 5.5], look: [0, 0, 0] },
+  // 6 — CTA: pulled back from trust, slightly wider
+  { pos: [0.3, 0.8, -5.5], look: [0, 0, 0] },
 ];
 
 // Convert to Vector3s
@@ -73,24 +80,34 @@ camera.position.copy(wpPos[0]);
 camera.lookAt(wpLook[0]);
 
 // ── Load GLB model ──
-let coin = null;
+let pivot = null;
+let modelMaxDim = null;
+
+function coinTargetSize() {
+  return window.innerWidth < 768 ? 1.5 : 2.5;
+}
 
 const loader = new GLTFLoader();
 loader.load("assets/models/monero.glb", (gltf) => {
-  coin = gltf.scene;
+  const coin = gltf.scene;
 
-  // Center the model at origin
+  // Compute bounding box to find center and size
   const box = new THREE.Box3().setFromObject(coin);
   const center = box.getCenter(new THREE.Vector3());
+  const size = box.getSize(new THREE.Vector3());
+
+  // Offset the coin so its visual center sits at the pivot's origin
   coin.position.sub(center);
 
-  // Normalize scale so the coin is ~2.5 units across
-  const size = box.getSize(new THREE.Vector3());
-  const maxDim = Math.max(size.x, size.y, size.z);
-  const scale = 2.5 / maxDim;
-  coin.scale.multiplyScalar(scale);
+  // Create a pivot group at world origin
+  pivot = new THREE.Group();
+  pivot.add(coin);
 
-  scene.add(coin);
+  // Normalize scale — responsive to viewport width
+  modelMaxDim = Math.max(size.x, size.y, size.z);
+  pivot.scale.setScalar(coinTargetSize() / modelMaxDim);
+
+  scene.add(pivot);
 });
 
 // ── Scroll tracking ──
@@ -111,25 +128,40 @@ function getActiveSection() {
 
 let currentWaypoint = 0;
 
+// ── Rotation impulse system ──
+const BASE_ROT = 0.003;
+const ROT_DECAY = 0.99;
+const FIRST_IMPULSE = 2 * Math.PI * (1 - ROT_DECAY); // 1 full spin (~0.063)
+const OTHER_IMPULSE = Math.PI * (1 - ROT_DECAY);     // ~0.5 spin  (~0.031)
+let rotExtra = 0;
+
 main.addEventListener("scroll", () => {
   const idx = getActiveSection();
   if (idx !== currentWaypoint) {
+    const prev = currentWaypoint;
     currentWaypoint = idx;
     targetPos.copy(wpPos[idx]);
     targetLook.copy(wpLook[idx]);
+
+    // Fire rotation impulse (always positive — same direction as base spin)
+    if (prev === 0 && idx === 1) {
+      rotExtra += FIRST_IMPULSE;
+    } else {
+      rotExtra += OTHER_IMPULSE;
+    }
   }
 });
 
 // ── Animation loop ──
 const LERP_SPEED = 0.018; // slow cinematic ~3s convergence
-const ROTATION_SPEED = 0.003;
 
 function animate() {
   requestAnimationFrame(animate);
 
-  // Auto-rotate the coin
-  if (coin) {
-    coin.rotation.y += ROTATION_SPEED;
+  // Auto-rotate + decaying impulse (always same direction)
+  if (pivot) {
+    pivot.rotation.y += BASE_ROT + rotExtra;
+    rotExtra *= ROT_DECAY;
   }
 
   // Lerp camera position and lookAt target
@@ -147,4 +179,9 @@ window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+
+  // Recompute coin scale for responsive sizing
+  if (pivot && modelMaxDim) {
+    pivot.scale.setScalar(coinTargetSize() / modelMaxDim);
+  }
 });
