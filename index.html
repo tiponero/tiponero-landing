@@ -21,7 +21,9 @@
 		<meta name="twitter:description" content="Self-hosted Monero payment engine for creators and vendors." />
 
 		<link rel="canonical" href="https://tiponero.org" />
+		<link rel="icon" type="image/svg+xml" href="/assets/favicon/logo.svg" />
 		<link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+		<link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon/android-chrome-192x192.png" />
 		<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
 		<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
@@ -48,7 +50,7 @@
 			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
 			rel="stylesheet"
 		/>
-		<script src="tailwind.config.js"></script>
+		<script src="tailwind.config.mjs"></script>
 		<script type="importmap">
 			{
 				"imports": {
@@ -228,6 +230,7 @@
 			<a
 				class="orange-gradient text-on-primary-fixed font-bold px-6 py-2 rounded-sm milled-edge hover:opacity-90 transition-all duration-150 active:scale-95 uppercase text-md tracking-wider font-headline hidden md:inline-block"
 				href="https://tiponero.org/docs"
+				target="_blank"
 				>DOCS</a
 			>
 
@@ -289,6 +292,7 @@
 				<a
 					class="orange-gradient text-on-primary-fixed font-bold px-6 py-3 rounded-sm milled-edge hover:opacity-90 transition-all uppercase text-md tracking-wider font-headline w-full text-center mt-2"
 					href="https://tiponero.org/docs"
+					target="_blank"
 					@click="mobileOpen = false"
 					>DOCS</a
 				>
@@ -296,32 +300,35 @@
 		</header>
 
 		<main x-data class="relative z-10">
-			<section id="home" class="snap-section px-8 md:px-24 relative overflow-hidden bg-background/40">
-				<div class="max-w-5xl relative z-10">
-					<h1 class="font-headline text-5xl sm:text-6xl md:text-8xl font-bold tracking-[-0.02em] mb-8 leading-[1.1]">
-						<span class="hero-word" style="animation-delay: 0.15s">The </span>
-						<span class="hero-word" style="animation-delay: 0.25s">private </span>
-						<span class="hero-word text-primary-container glow-orange" style="animation-delay: 0.45s">Monero</span
-						><br />
-						<span class="hero-word" style="animation-delay: 0.65s">payment</span>
-						<span class="hero-word" style="animation-delay: 0.75s">engine</span>
-					</h1>
-					<p
-						class="hero-fade font-body text-xl md:text-2xl text-on-surface-variant max-w-2xl mb-12 leading-relaxed"
-						style="animation-delay: 1s"
-					>
-						Self-hosted. Unique subaddress per transaction. Accept donations or fixed-amount payments. The way the
-						protocol was designed to be used.
-					</p>
-					<div class="hero-fade flex flex-wrap gap-4" style="animation-delay: 1.25s">
+			<section id="home" class="snap-section px-8 md:px-24 relative overflow-hidden bg-background/25">
+				<div class="flex-1 flex flex-col sm:justify-center justify-between py-8 max-w-5xl relative z-10">
+          <div>
+            <h1 class="font-headline text-5xl sm:text-6xl md:text-8xl font-bold tracking-[-0.02em] mb-8 leading-[1.1]">
+              <span class="hero-word" style="animation-delay: 0.15s">The </span>
+              <span class="hero-word" style="animation-delay: 0.25s">private </span>
+              <span class="hero-word text-primary-container glow-orange" style="animation-delay: 0.45s">Monero</span
+              ><br />
+              <span class="hero-word" style="animation-delay: 0.65s">payment</span>
+              <span class="hero-word" style="animation-delay: 0.75s">engine</span>
+            </h1>
+            <p
+              class="hero-fade font-body font-bold text-xl md:text-2xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] max-w-2xl mb-12 leading-relaxed"
+              style="animation-delay: 1s"
+            >
+              Self-hosted. Subaddress per transaction.</br> Supports payments and donations. </br></br>
+              The way the protocol was designed to be used.
+            </p>
+            </div>
+					<div class="hero-fade flex gap-3 md:gap-4" style="animation-delay: 1.25s">
 						<a
-							class="orange-gradient text-on-primary-fixed font-bold px-8 py-4 rounded-sm text-lg milled-edge hover:opacity-90 transition-all font-headline uppercase tracking-tight"
-							href="https://tiponero.org/docs"
+							class="orange-gradient text-on-primary-fixed font-bold px-5 md:px-8 py-4 rounded-sm text-lg milled-edge hover:opacity-90 transition-all font-headline uppercase tracking-tight"
+              href="#get-started"
 						>
 							Get Started
 						</a>
 						<a
-							class="bg-surface-container-high text-primary px-8 py-4 rounded-sm text-lg milled-edge hover:bg-surface-bright transition-all font-headline uppercase tracking-tight"
+							class="bg-surface-container-high text-primary px-5 md:px-8 py-4 rounded-sm text-lg milled-edge hover:bg-surface-bright transition-all font-headline uppercase tracking-tight"
+              target="_blank"
 							href="https://github.com/tiponero/tiponero-core"
 						>
 							View on GitHub
@@ -346,7 +353,7 @@
 							Accepting Monero is harder than it should be.
 						</h2>
 					</div>
-					<div class="font-body text-lg text-on-surface-variant space-y-6 leading-relaxed">
+					<div class="font-body text-lg md:text-xl text-on-surface-variant space-y-6 leading-relaxed">
 						<p class="reveal r-right" x-intersect.once="$el.classList.add('in-view')" style="transition-delay: 0.2s">
 							Most setups paste a static address and call it done. That means every payer sends to the same address, you
 							have no way to attribute payments, and you are not using subaddresses the way Monero was designed to work.
@@ -385,9 +392,11 @@
 							x-intersect.once="$el.classList.add('in-view')"
 							style="transition-delay: 0.15s"
 						>
-							<span class="font-label text-primary mb-4 md:mb-6 text-xl">01</span>
-							<h3 class="font-headline font-bold mb-3 md:mb-4 text-xl">Deploy</h3>
-							<p class="text-on-surface-variant font-body text-md md:text-base">
+							<div class="flex items-baseline gap-3 mb-3 md:mb-4">
+								<span class="font-label text-primary text-xl">01</span>
+								<h3 class="font-headline font-bold text-xl">Deploy</h3>
+							</div>
+							<p class="text-on-surface-variant font-body text-base md:text-lg">
 								Deploy on your own server. Point it at your monero-wallet-rpc instance running in view-only mode. Your
 								spending keys never touch the server.
 							</p>
@@ -397,9 +406,11 @@
 							x-intersect.once="$el.classList.add('in-view')"
 							style="transition-delay: 0.25s"
 						>
-							<span class="font-label text-primary mb-4 md:mb-6 text-xl">02</span>
-							<h3 class="font-headline font-bold mb-3 md:mb-4 text-xl">Embed</h3>
-							<p class="text-on-surface-variant font-body text-md md:text-base">
+							<div class="flex items-baseline gap-3 mb-3 md:mb-4">
+								<span class="font-label text-primary text-xl">02</span>
+								<h3 class="font-headline font-bold text-xl">Embed</h3>
+							</div>
+							<p class="text-on-surface-variant font-body text-base md:text-lg">
 								Embed the widget on your site. A single iframe drop-in or SVG badge. Works on any website or markdown
 								document.
 							</p>
@@ -409,9 +420,11 @@
 							x-intersect.once="$el.classList.add('in-view')"
 							style="transition-delay: 0.35s"
 						>
-							<span class="font-label text-primary mb-4 md:mb-6 text-xl">03</span>
-							<h3 class="font-headline font-bold mb-3 md:mb-4 text-xl">Use Subaddress</h3>
-							<p class="text-on-surface-variant font-body text-md md:text-base">
+							<div class="flex items-baseline gap-3 mb-3 md:mb-4">
+								<span class="font-label text-primary text-xl">03</span>
+								<h3 class="font-headline font-bold text-xl">Use Subaddress</h3>
+							</div>
+							<p class="text-on-surface-variant font-body text-base md:text-lg">
 								Each payer gets a unique subaddress. Displayed as a QR code, monitored in real time. Address is never
 								reused.
 							</p>
@@ -421,9 +434,11 @@
 							x-intersect.once="$el.classList.add('in-view')"
 							style="transition-delay: 0.45s"
 						>
-							<span class="font-label text-primary mb-4 md:mb-6 text-xl">04</span>
-							<h3 class="font-headline font-bold mb-3 md:mb-4 text-xl">Track Payments</h3>
-							<p class="text-on-surface-variant font-body text-md md:text-base">
+							<div class="flex items-baseline gap-3 mb-3 md:mb-4">
+								<span class="font-label text-primary text-xl">04</span>
+								<h3 class="font-headline font-bold text-xl">Track Payments</h3>
+							</div>
+							<p class="text-on-surface-variant font-body text-base md:text-lg">
 								Payments appear in your admin panel. Track transactions, manage widgets. Your data stays on your
 								machine.
 							</p>
@@ -444,75 +459,74 @@
 					</div>
 					<div class="space-y-8 md:space-y-12">
 						<div
-							class="reveal r-right grid md:grid-cols-12 items-start gap-4 md:gap-8 group"
+							class="reveal r-right grid grid-cols-[auto_1fr] md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,1.5fr)] items-baseline gap-4 md:gap-6 group"
 							x-intersect.once="$el.classList.add('in-view')"
 							style="transition-delay: 0.15s"
 						>
-							<div class="md:col-span-1 font-label text-primary-container text-md py-2">01</div>
+							<div class="font-label text-primary-container text-md">01</div>
 							<div
-								class="md:col-span-4 font-headline text-2xl md:text-3xl font-bold py-2 group-hover:text-primary-container transition-colors"
+								class="font-headline text-2xl md:text-3xl font-bold group-hover:text-primary-container transition-colors"
 							>
 								Open source developers
 							</div>
 							<div
-								class="md:col-span-7 font-body text-on-surface-variant text-base md:text-lg leading-relaxed pl-0 md:pl-8"
+								class="col-span-full md:col-auto font-body text-on-surface-variant text-lg md:text-xl leading-relaxed"
 							>
 								Accept donations for your project without routing payments through a third-party custodian. Keep your
 								donors and your amounts to yourself.
 							</div>
 						</div>
 						<div
-							class="reveal r-right grid md:grid-cols-12 items-start gap-4 md:gap-8 group"
+							class="reveal r-right grid grid-cols-[auto_1fr] md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,1.5fr)] items-baseline gap-4 md:gap-6 group"
 							x-intersect.once="$el.classList.add('in-view')"
 							style="transition-delay: 0.3s"
 						>
-							<div class="md:col-span-1 font-label text-primary-container text-md py-2">02</div>
+							<div class="font-label text-primary-container text-md">02</div>
 							<div
-								class="md:col-span-4 font-headline text-2xl md:text-3xl font-bold py-2 group-hover:text-primary-container transition-colors"
+								class="font-headline text-2xl md:text-3xl font-bold group-hover:text-primary-container transition-colors"
 							>
 								Journalists and activists
 							</div>
 							<div
-								class="md:col-span-7 font-body text-on-surface-variant text-base md:text-lg leading-relaxed pl-0 md:pl-8"
+								class="col-span-full md:col-auto font-body text-on-surface-variant text-lg md:text-xl leading-relaxed"
 							>
-								Financial surveillance is real. Monero solves it at the protocol level. Tiponero makes sure your payment
-								setup doesn't introduce it back at the application layer.
+                Monero protects your transactions at the protocol level. Tiponero makes sure your payment setup uses it correctly.
 							</div>
 						</div>
 						<div
-							class="reveal r-right grid md:grid-cols-12 items-start gap-4 md:gap-8 group"
+							class="reveal r-right grid grid-cols-[auto_1fr] md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,1.5fr)] items-baseline gap-4 md:gap-6 group"
 							x-intersect.once="$el.classList.add('in-view')"
 							style="transition-delay: 0.45s"
 						>
-							<div class="md:col-span-1 font-label text-primary-container text-md py-2">03</div>
+							<div class="font-label text-primary-container text-md">03</div>
 							<div
-								class="md:col-span-4 font-headline text-2xl md:text-3xl font-bold py-2 group-hover:text-primary-container transition-colors"
+								class="font-headline text-2xl md:text-3xl font-bold group-hover:text-primary-container transition-colors"
 							>
 								Privacy-conscious creators
 							</div>
 							<div
-								class="md:col-span-7 font-body text-on-surface-variant text-base md:text-lg leading-relaxed pl-0 md:pl-8"
+								class="col-span-full md:col-auto font-body text-on-surface-variant text-lg md:text-xl leading-relaxed"
 							>
 								Writers, podcasters, independent researchers. If you want to accept support from your audience without
 								handing your financial data to a platform, this is for you.
 							</div>
 						</div>
 						<div
-							class="reveal r-right grid md:grid-cols-12 items-start gap-4 md:gap-8 group"
+							class="reveal r-right grid grid-cols-[auto_1fr] md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,1.5fr)] items-baseline gap-4 md:gap-6 group"
 							x-intersect.once="$el.classList.add('in-view')"
 							style="transition-delay: 0.6s"
 						>
-							<div class="md:col-span-1 font-label text-primary-container text-md py-2">04</div>
+							<div class="font-label text-primary-container text-md">04</div>
 							<div
-								class="md:col-span-4 font-headline text-2xl md:text-3xl font-bold py-2 group-hover:text-primary-container transition-colors"
+								class="font-headline text-2xl md:text-3xl font-bold group-hover:text-primary-container transition-colors"
 							>
 								Vendors and merchants
 							</div>
 							<div
-								class="md:col-span-7 font-body text-on-surface-variant text-base md:text-lg leading-relaxed pl-0 md:pl-8"
+								class="col-span-full md:col-auto font-body text-on-surface-variant text-lg md:text-xl leading-relaxed"
 							>
-								Sell digital goods, services, or access without a payment processor that knows your customers.
-								Fixed-amount requests, automatic redirect on confirmation.
+								Sell digital goods or services without a payment processor that knows your customers.
+								Fixed-amount payment requests, automatic redirect on confirmation.
 							</div>
 						</div>
 					</div>
@@ -542,9 +556,8 @@
 									>privacy_tip</span
 								>
 								<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Unique subaddress per transaction</h3>
-								<p class="text-on-surface-variant text-md md:text-base max-w-md">
-									The Monero protocol was built around subaddresses. Tiponero uses them correctly: one per payment
-									session, never reused.
+								<p class="text-on-surface-variant text-base md:text-lg max-w-md">
+									The Monero protocol was built around subaddresses. Tiponero uses them correctly: one per payment.
 								</p>
 							</div>
 							<div class="font-label text-xs text-primary-fixed-dim/60 tracking-widest mt-6">84B1E9...A922F</div>
@@ -560,40 +573,9 @@
 								>visibility_off</span
 							>
 							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">View-key only</h3>
-							<p class="text-on-surface-variant text-md md:text-base">
-								Your monero-wallet-rpc runs in view-only mode. The server can monitor incoming funds and cannot spend
-								them. Ever.
-							</p>
-						</div>
-						<div
-							class="reveal r-scale bg-surface-container-high p-6 md:p-8 milled-edge"
-							x-intersect.once="$el.classList.add('in-view')"
-							style="transition-delay: 0.25s"
-						>
-							<span
-								class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4"
-								aria-hidden="true"
-								>tune</span
-							>
-							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Two modes, one widget</h3>
-							<p class="text-on-surface-variant text-md md:text-base">
-								Donation mode accepts arbitrary amounts. Vendor mode requires a fixed amount before confirming.
-							</p>
-						</div>
-						<div
-							class="reveal r-scale bg-surface-container-high p-6 md:p-8 milled-edge"
-							x-intersect.once="$el.classList.add('in-view')"
-							style="transition-delay: 0.28s"
-						>
-							<span
-								class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4"
-								aria-hidden="true"
-								>open_in_new</span
-							>
-							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Redirect on completion</h3>
-							<p class="text-on-surface-variant text-md md:text-base">
-								Define a redirect URL per widget. When a payment is detected, the user is redirected automatically.
-								Confirmation pages, order receipts, thank-you flows. Yours to control.
+							<p class="text-on-surface-variant text-base md:text-lg">
+								Your monero-wallet-rpc runs in view-only mode. The server can monitor incoming funds but cannot spend
+								them.
 							</p>
 						</div>
 						<div
@@ -607,8 +589,8 @@
 								>widgets</span
 							>
 							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Embeddable widget</h3>
-							<p class="text-on-surface-variant text-md md:text-base">
-								Drop an iframe into any page. A unique QR code is generated per payment, with real-time payment
+							<p class="text-on-surface-variant text-base md:text-lg">
+								Drop an iframe into any page. A unique QR code is generated per payment, with real-time
 								detection. Works on any stack.
 							</p>
 						</div>
@@ -623,7 +605,7 @@
 								>dashboard</span
 							>
 							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Admin panel</h3>
-							<p class="text-on-surface-variant text-md md:text-base">
+							<p class="text-on-surface-variant text-base md:text-lg">
 								Track transactions, manage multiple widgets, and monitor your setup from a self-hosted private
 								dashboard.
 							</p>
@@ -639,9 +621,8 @@
 								>dns</span
 							>
 							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Fully self-hosted</h3>
-							<p class="text-on-surface-variant text-md md:text-base">
-								You run it on your infrastructure. We never see your payers, your amounts, or your data. No cloud, no
-								account.
+							<p class="text-on-surface-variant text-base md:text-lg">
+								You run it on your infrastructure. No cloud, no account.
 							</p>
 						</div>
 						<div
@@ -655,7 +636,7 @@
 								>
 								<div>
 									<h3 class="font-headline text-xl md:text-2xl font-bold">MIT licensed</h3>
-									<p class="text-on-surface-variant text-md md:text-base">
+									<p class="text-on-surface-variant text-base md:text-lg">
 										Read it, audit it, fork it. No strings attached.
 									</p>
 								</div>
@@ -679,8 +660,8 @@
 						x-intersect.once="$el.classList.add('in-view')"
 						style="transition-delay: 0.3s"
 					>
-						Not because we can't. Because the whole point is that we never see your payers or funds. Self-hosted is not
-						a limitation. It's by design.
+						Not because we can't. Because the whole point is that we never see your payers or funds. Self-hosting is not
+						a limitation, it's the design.
 					</p>
 					<div
 						class="reveal r-scale p-4 bg-surface-container-lowest inline-block"
@@ -718,6 +699,7 @@
 							<a
 								class="reveal r-right bg-surface-container-high p-6 md:p-8 flex justify-between items-center milled-edge hover:bg-surface-bright transition-all group"
 								href="https://tiponero.org/docs"
+								target="_blank"
 								x-intersect.once="$el.classList.add('in-view')"
 								style="transition-delay: 0.15s"
 							>
@@ -731,10 +713,11 @@
 							<a
 								class="reveal r-right bg-surface-container-high p-6 md:p-8 flex justify-between items-center milled-edge hover:bg-surface-bright transition-all group"
 								href="https://tiponero.org/demo"
+								target="_blank"
 								x-intersect.once="$el.classList.add('in-view')"
 								style="transition-delay: 0.25s"
 							>
-								<span class="font-headline text-xl md:text-2xl font-bold">Live Demo</span>
+								<span class="font-headline text-xl md:text-2xl font-bold">Demo Video</span>
 								<span
 									class="material-symbols-outlined text-primary-container group-hover:translate-x-2 transition-transform"
 									aria-hidden="true"
@@ -744,6 +727,7 @@
 							<a
 								class="reveal r-right bg-surface-container-high p-6 md:p-8 flex justify-between items-center milled-edge hover:bg-surface-bright transition-all group"
 								href="https://github.com/tiponero/tiponero-core"
+								target="_blank"
 								x-intersect.once="$el.classList.add('in-view')"
 								style="transition-delay: 0.35s"
 							>
@@ -772,21 +756,19 @@
 							<a
 								class="font-label text-xs uppercase tracking-widest text-monero-gray hover:text-on-surface transition-colors"
 								href="https://tiponero.org/docs"
+								target="_blank"
 								>DOCS</a
 							>
 							<a
 								class="font-label text-xs uppercase tracking-widest text-monero-gray hover:text-on-surface transition-colors"
 								href="https://github.com/tiponero/tiponero-core"
+								target="_blank"
 								>GitHub</a
 							>
 							<a
 								class="font-label text-xs uppercase tracking-widest text-monero-gray hover:text-on-surface transition-colors"
-								href="https://tiponero.org/demo"
-								>DEMO</a
-							>
-							<a
-								class="font-label text-xs uppercase tracking-widest text-monero-gray hover:text-on-surface transition-colors"
 								href="https://github.com/tiponero/tiponero-core/blob/main/LICENSE"
+								target="_blank"
 								>LICENCE</a
 							>
 						</div>
@@ -796,7 +778,7 @@
 			</section>
 		</main>
 
-		<script src="scroll.js"></script>
-		<script type="module" src="scene.js"></script>
+		<script src="scripts/scroll.js"></script>
+		<script type="module" src="scripts/scene.js"></script>
 	</body>
 </html>
