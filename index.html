@@ -378,11 +378,6 @@
 			<section id="problem" class="snap-section px-8 md:px-24 bg-surface-container-low/85">
 				<div class="grid md:grid-cols-2 gap-16 md:gap-24 items-center w-full">
 					<div>
-						<span
-							class="reveal r-up font-label text-primary-container uppercase tracking-[0.2em] mb-4 block text-md"
-							x-intersect.once="$el.classList.add('in-view')"
-							>The Problem</span
-						>
 						<h2
 							class="reveal r-up font-headline text-4xl md:text-5xl font-bold tracking-tight mb-8"
 							x-intersect.once="$el.classList.add('in-view')"
@@ -410,12 +405,7 @@
 
 			<section id="how-it-works" class="snap-section px-8 md:px-24 bg-background/85">
 				<div class="w-full">
-					<div class="mb-16 md:mb-24">
-						<span
-							class="reveal r-up font-label text-primary-container uppercase tracking-[0.2em] mb-4 block text-md"
-							x-intersect.once="$el.classList.add('in-view')"
-							>How It Works</span
-						>
+					<div class="mb-12 md:mb-16">
 						<h2
 							class="reveal r-up font-headline text-4xl md:text-5xl font-bold tracking-tight"
 							x-intersect.once="$el.classList.add('in-view')"
@@ -487,7 +477,7 @@
 
 			<section id="for-who" class="snap-section px-8 md:px-24 bg-background/85">
 				<div class="w-full">
-					<div class="mb-16 md:mb-24">
+					<div class="mb-12 md:mb-16">
 						<h2
 							class="reveal r-up font-headline text-4xl md:text-6xl font-bold tracking-tight max-w-xl"
 							x-intersect.once="$el.classList.add('in-view')"
@@ -684,30 +674,32 @@
 				</div>
 			</section>
 
-			<section id="trust" class="snap-section px-8 md:px-24 bg-surface-container-low/85">
-				<div class="max-w-4xl mx-auto text-center">
+			<section id="trust" class="snap-section bg-surface-container-low/85">
+				<div class="max-w-4xl mx-auto text-center px-8 md:px-24">
 					<h2
 						class="reveal r-blur font-headline text-4xl md:text-5xl font-bold mb-8"
 						x-intersect.once="$el.classList.add('in-view')"
 						style="transition-delay: 0.15s"
 					>
-						We will never run a hosted version.
+						We will never run a cloud version.
 					</h2>
 					<p
 						class="reveal r-up font-body text-lg md:text-xl text-on-surface-variant mb-8 leading-relaxed"
 						x-intersect.once="$el.classList.add('in-view')"
 						style="transition-delay: 0.3s"
 					>
-						Not because we can't. Because the whole point is that we never see your payers or funds. Self-hosting is not
-						a limitation, it's the design.
+						Not because we can't. Because the whole point is that no one sees your payers or funds. Self-hosting is not
+						a limitation, it's the design.<br /><br />
+
+            You can support the project using our self-hosted Tiponero widget below:
 					</p>
-					<div
-						class="reveal r-scale inline-block"
-						x-intersect.once="$el.classList.add('in-view')"
-						style="transition-delay: 0.45s"
-					>
-						<iframe src="https://demo.tiponero.org/widget/dda5980a-157f-4fed-8b19-97b4940ef808" width="400" height="648" frameborder="0"></iframe>
-					</div>
+				</div>
+				<div
+					class="reveal r-scale flex justify-center w-full"
+					x-intersect.once="$el.classList.add('in-view')"
+					style="transition-delay: 0.45s"
+				>
+					<iframe src="https://demo.tiponero.org/widget/dda5980a-157f-4fed-8b19-97b4940ef808" class="w-[400px] h-[650px] max-w-full" frameborder="0"></iframe>
 				</div>
 			</section>
 
@@ -726,7 +718,7 @@
 								x-intersect.once="$el.classList.add('in-view')"
 								style="transition-delay: 0.1s"
 							>
-								Full documentation, Docker, NixOS and Makefile deployment guides.
+								Full documentation, Docker, NixOS and Makefile deployment guides:
 							</p>
 						</div>
 						<div class="grid gap-4">
@@ -748,7 +740,7 @@
 								class="reveal r-right bg-surface-container-high p-6 md:p-8 flex justify-between items-center milled-edge hover:bg-surface-bright transition-all group"
 								href="https://github.com/tiponero/tiponero-core"
 								target="_blank"
-								x-intesect.once="$el.classList.add('in-view')"
+								x-intersect.once="$el.classList.add('in-view')"
 								style="transition-delay: 0.35s"
 							>
 								<span class="font-headline text-xl md:text-2xl font-bold">Check on GitHub</span>
@@ -790,6 +782,12 @@
 								href="https://github.com/tiponero/tiponero-core/blob/main/LICENSE"
 								target="_blank"
 								>LICENCE</a
+							>
+							<a
+								class="font-label text-xs uppercase tracking-widest text-monero-gray hover:text-on-surface transition-colors"
+								href="https://demo.tiponero.org/widget/dda5980a-157f-4fed-8b19-97b4940ef808"
+								target="_blank"
+								>SUPPORT</a
 							>
 						</div>
 						<div class="font-label text-xs uppercase tracking-widest text-monero-gray">&copy; 2026 TIPONERO.ORG</div>
