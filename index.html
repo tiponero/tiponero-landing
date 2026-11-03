@@ -21,12 +21,13 @@
 		<meta name="twitter:description" content="Self-hosted Monero payment engine for creators and vendors." />
 
 		<link rel="canonical" href="https://tiponero.org" />
-		<link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
-		<link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon/android-chrome-192x192.png" />
-		<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
-		<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
-		<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
-		<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+		<link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg" />
+		<link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico" />
+		<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/android-chrome-192x192.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
+		<link rel="manifest" href="assets/favicon/site.webmanifest" />
 
 		<script src="https://cdn.tailwindcss.com?plugins=container-queries"></script>
 		<script
@@ -207,7 +208,10 @@
 				}
 			}"
 		>
-			<a href="#home" class="text-2xl font-bold tracking-tighter text-primary font-headline uppercase">Tiponero</a>
+			<a href="#home" class="flex items-center gap-3 text-2xl font-bold tracking-tighter text-primary font-headline uppercase">
+				<img src="assets/logo.svg" alt="" class="h-8 w-8" />
+				<span>Tiponero</span>
+			</a>
 
 			<nav x-cloak class="hidden md:flex gap-5 items-center md:absolute md:left-1/2 md:-translate-x-1/2" aria-label="Primary navigation">
 				<a class="relative pb-2 font-headline tracking-[-0.02em] uppercase whitespace-nowrap transition-colors"
