@@ -6,7 +6,7 @@
 		<title>Tiponero - Monero Payments for Creators and Vendors</title>
 		<meta
 			name="description"
-			content="Self-hosted Monero payment engine for Creators and Vendors. embeddable, MIT licensed."
+			content="Self-hosted Monero payment engine for creators and vendors. Embeddable, MIT licensed."
 		/>
 		<meta name="theme-color" content="#FF6600" />
 
@@ -29,33 +29,15 @@
 		<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
 		<link rel="manifest" href="assets/favicon/site.webmanifest" />
 
-		<script src="https://cdn.tailwindcss.com?plugins=container-queries"></script>
-		<script
-			defer
-			src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.14.9/dist/cdn.min.js"
-			integrity="sha384-eA6+k1peuuIgxPHwWoQHx6OoDZ7hFJ+SKfMOhop5+zMV4SWR5OWBMatbIdoqA4lZ"
-			crossorigin="anonymous"
-		></script>
-		<script
-			defer
-			src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"
-			integrity="sha384-9Ax3MmS9AClxJyd5/zafcXXjxmwFhZCdsT6HJoJjarvCaAkJlk5QDzjLJm+Wdx5F"
-			crossorigin="anonymous"
-		></script>
-		<link
-			href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-			rel="stylesheet"
-		/>
-		<script src="tailwind.config.mjs"></script>
+		<link rel="stylesheet" href="assets/fonts.css" />
+		<link rel="stylesheet" href="assets/css/site.css" />
+		<script defer src="assets/vendor/intersect.min.js"></script>
+		<script defer src="assets/vendor/alpine.min.js"></script>
 		<script type="importmap">
 			{
 				"imports": {
-					"three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js",
-					"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+					"three": "assets/vendor/three.module.min.js",
+					"three/addons/": "assets/vendor/addons/"
 				}
 			}
 		</script>
@@ -583,11 +565,7 @@
 							style="transition-delay: 0.1s"
 						>
 							<div>
-								<span
-									class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4"
-									aria-hidden="true"
-									>privacy_tip</span
-								>
+								<span class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4" aria-hidden="true">privacy_tip</span>
 								<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Unique subaddress per transaction</h3>
 								<p class="text-on-surface-variant text-base md:text-lg max-w-md">
 									The Monero protocol was built around subaddresses. Tiponero uses them correctly: one per payment.
@@ -600,15 +578,10 @@
 							x-intersect.once="$el.classList.add('in-view')"
 							style="transition-delay: 0.2s"
 						>
-							<span
-								class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4"
-								aria-hidden="true"
-								>visibility_off</span
-							>
+							<span class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4" aria-hidden="true">visibility_off</span>
 							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">View-key only</h3>
 							<p class="text-on-surface-variant text-base md:text-lg">
-								Your monero-wallet-rpc runs in view-only mode. The server can monitor incoming funds but cannot spend
-								them.
+								Your monero-wallet-rpc runs in view-only mode. The server can monitor incoming funds but cannot spend them.
 							</p>
 						</div>
 						<div
@@ -616,31 +589,10 @@
 							x-intersect.once="$el.classList.add('in-view')"
 							style="transition-delay: 0.3s"
 						>
-							<span
-								class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4"
-								aria-hidden="true"
-								>widgets</span
-							>
+							<span class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4" aria-hidden="true">widgets</span>
 							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Embeddable widget</h3>
 							<p class="text-on-surface-variant text-base md:text-lg">
-								Drop an iframe into any page. A unique QR code is generated per payment, with real-time
-								detection. Works on any stack.
-							</p>
-						</div>
-						<div
-							class="reveal r-scale bg-surface-container-high p-6 md:p-8 milled-edge"
-							x-intersect.once="$el.classList.add('in-view')"
-							style="transition-delay: 0.35s"
-						>
-							<span
-								class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4"
-								aria-hidden="true"
-								>dashboard</span
-							>
-							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Admin panel</h3>
-							<p class="text-on-surface-variant text-base md:text-lg">
-								Track transactions, manage multiple widgets, and monitor your setup from a self-hosted private
-								dashboard.
+								Drop an iframe into any page. Preset amounts, a donation goal, and live payment status on any stack.
 							</p>
 						</div>
 						<div
@@ -648,32 +600,42 @@
 							x-intersect.once="$el.classList.add('in-view')"
 							style="transition-delay: 0.4s"
 						>
-							<span
-								class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4"
-								aria-hidden="true"
-								>dns</span
-							>
-							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Fully self-hosted</h3>
+							<span class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4" aria-hidden="true">api</span>
+							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Payments API</h3>
 							<p class="text-on-surface-variant text-base md:text-lg">
-								You run it on your infrastructure. No cloud, no account.
+								Create a charge from your backend. Get a subaddress, a QR code, and an embeddable iframe link.
 							</p>
 						</div>
 						<div
-							class="reveal r-up md:col-span-3 bg-surface-container-high p-6 md:p-8 milled-edge flex items-center"
+							class="reveal r-scale bg-surface-container-high p-6 md:p-8 milled-edge"
 							x-intersect.once="$el.classList.add('in-view')"
 							style="transition-delay: 0.5s"
 						>
-							<div class="flex items-center gap-4 md:gap-6">
-								<span class="material-symbols-outlined text-primary-container text-3xl md:text-4xl" aria-hidden="true"
-									>verified_user</span
-								>
-								<div>
-									<h3 class="font-headline text-xl md:text-2xl font-bold">MIT licensed</h3>
-									<p class="text-on-surface-variant text-base md:text-lg">
-										Read it, audit it, fork it. No strings attached.
-									</p>
-								</div>
-							</div>
+							<span class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4" aria-hidden="true">notifications</span>
+							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Notifications</h3>
+							<p class="text-on-surface-variant text-base md:text-lg">
+								Signed webhooks to your server, or alerts in Telegram, Discord, Slack, WhatsApp, and email.
+							</p>
+						</div>
+						<div
+							class="reveal r-scale md:col-span-2 bg-surface-container-high p-6 md:p-8 milled-edge"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.6s"
+						>
+							<span class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4" aria-hidden="true">dns</span>
+							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">Fully self-hosted</h3>
+							<p class="text-on-surface-variant text-base md:text-lg max-w-md">
+								You run it on your infrastructure. No cloud, no account, and no third-party assets.
+							</p>
+						</div>
+						<div
+							class="reveal r-scale bg-surface-container-high p-6 md:p-8 milled-edge"
+							x-intersect.once="$el.classList.add('in-view')"
+							style="transition-delay: 0.7s"
+						>
+							<span class="material-symbols-outlined text-primary-container text-3xl md:text-4xl mb-4" aria-hidden="true">verified_user</span>
+							<h3 class="font-headline text-xl md:text-2xl font-bold mb-3">MIT licensed</h3>
+							<p class="text-on-surface-variant text-base md:text-lg">Read it, audit it, fork it.</p>
 						</div>
 					</div>
 				</div>

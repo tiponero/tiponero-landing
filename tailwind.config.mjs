@@ -1,5 +1,6 @@
-tailwind.config = {
+export default {
   darkMode: "class",
+  content: ["./index.html", "./scripts/**/*.js"],
   theme: {
     extend: {
       colors: {
